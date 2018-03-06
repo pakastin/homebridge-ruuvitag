@@ -1,0 +1,19 @@
+{
+  "name": "homebridge-ruuvitag",
+  "version": "1.0.0",
+  "description": "Ruuvitag bridge for Homebridge",
+  "main": "index.js",
+  "dependencies": {
+    "node-ruuvitag": "~4.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": ""
+  },
+  "engines": {
+    "homebridge": ">=0.4.38"
+  },
+  "author": "Juha Lindstedt",
+  "keywords": "homebridge-plugin",
+  "license": "ISC"
+}
