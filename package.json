@@ -1,6 +1,6 @@
 {
   "name": "homebridge-ruuvitag",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ruuvitag bridge for Homebridge",
   "main": "index.js",
   "dependencies": {
@@ -15,7 +15,14 @@
   },
   "author": "Juha Lindstedt",
   "keywords": [
-    "homebridge-plugin", "ruuvitag", "temperature", "humidity", "homekit", "apple", "bluetooth", "node.js"
+    "homebridge-plugin",
+    "ruuvitag",
+    "temperature",
+    "humidity",
+    "homekit",
+    "apple",
+    "bluetooth",
+    "node.js"
   ],
   "license": "ISC",
   "repository": {
