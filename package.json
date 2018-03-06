@@ -14,6 +14,16 @@
     "homebridge": ">=0.4.38"
   },
   "author": "Juha Lindstedt",
-  "keywords": "homebridge-plugin",
-  "license": "ISC"
+  "keywords": [
+    "homebridge-plugin", "ruuvitag", "temperature", "humidity", "homekit", "apple", "bluetooth", "node.js"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pakastin/homebridge-ruuvitag.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pakastin/homebridge-ruuvitag/issues"
+  },
+  "homepage": "https://github.com/pakastin/homebridge-ruuvitag#readme"
 }
