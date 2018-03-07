@@ -20,32 +20,45 @@ module.exports = (homebridge) => {
 
 class Ruuvitag {
   constructor (log, config) {
-    const acc = this;
-
     this.log = log;
     this.name = config['name'];
     this.id = config['id'];
 
-    this.temperature = null;
-    this.humidity = null;
-
     this.tempService = new Service.TemperatureSensor(this.name);
+    this.humidityService = new Service.HumiditySensor(this.name);
+    this.batteryService = new Service.BatteryService(this.name);
+
     this.tempService
       .getCharacteristic(Characteristic.CurrentTemperature)
-      .setProps({ minValue: -200, maxValue: 200, minStep: 0.01 })
-      .on('get', this.getTemperature.bind(this));
+      .setProps({ minValue: -200, maxValue: 200, minStep: 0.01 });
 
-    this.humidityService = new Service.HumiditySensor(this.name);
     this.humidityService
       .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-      .setProps({ minValue: 0, maxValue: 100, minStep: 0.5 })
-      .on('get', this.getHumidity.bind(this));
+      .setProps({ minValue: 0, maxValue: 100, minStep: 0.5 });
+
+    this.batteryService
+      .getCharacteristic(Characteristic.ChargingState)
+      .setValue(Characteristic.ChargingState.NOT_CHARGEABLE);
 
     const listenTo = (tag) => {
       tag.on('updated', (data) => {
-        const { temperature, humidity } = data;
-        acc.temperature = temperature;
-        acc.humidity = humidity;
+        const { temperature, humidity, battery } = data;
+
+        this.tempService
+        .getCharacteristic(Characteristic.CurrentTemperature)
+        .updateValue(temperature);
+
+        this.humidityService
+        .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+        .updateValue(humidity);
+
+        this.batteryService
+        .getCharacteristic(Characteristic.BatteryLevel)
+        .updateValue(Math.log10(10 * (battery - 2500) / 500) * 100);
+
+        this.batteryService
+        .getCharacteristic(Characteristic.StatusLowBattery)
+        .updateValue((battery < 2700) ? 1 : 0);
       });
     };
 
@@ -59,13 +72,7 @@ class Ruuvitag {
       };
     }
   }
-  getTemperature (callback) {
-    callback(null, this.temperature);
-  }
-  getHumidity (callback) {
-    callback(null, this.humidity);
-  }
   getServices () {
-    return [this.tempService, this.humidityService];
+    return [this.tempService, this.humidityService, this.batteryService];
   }
 }
