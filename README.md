@@ -1,6 +1,6 @@
 # homebridge-ruuvitag
 
-With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use [Ruuvitags](https://tag.ruuvi.com/) with [Apple Home](https://www.apple.com/ios/home/).
+With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use [RuuviTags](https://tag.ruuvi.com/) with [Apple Home](https://www.apple.com/ios/home/).
 
 ## Installation
 First, install [Avahi](https://www.avahi.org/) (Homebridge needs this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin
@@ -23,7 +23,7 @@ Then create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridg
     "pin": "031-45-154"
   },
 
-  "description": "Ruuvitag bridge",
+  "description": "RuuviTag bridge",
 
   "accessories": [
     {
