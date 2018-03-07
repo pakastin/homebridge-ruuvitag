@@ -1,7 +1,7 @@
 # homebridge-ruuvitag
 [Ruuvitag](https://tag.ruuvi.com/) bridge for [Homebridge](https://github.com/nfarina/homebridge).
 
-With this bridge, you can use [Ruuvitags](https://tag.ruuvi.com/) with [Apple Home](https://www.apple.com/ios/home/).
+With this Homebridge plugin you can use [Ruuvitags](https://tag.ruuvi.com/) with [Apple Home](https://www.apple.com/ios/home/).
 
 ## Installation
 First, install [Avahi](https://www.avahi.org/) (Homebridge needs this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin
