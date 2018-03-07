@@ -12,7 +12,7 @@ sudo npm i -g homebridge
 sudo npm i -g homebridge-ruuvitag
 ```
 
-Then create a `~/.homebridge/config.json` file
+Then create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridge/blob/master/config-sample.json) file
 (change ID's and add/remove tags as necessary):
 
 ```json
