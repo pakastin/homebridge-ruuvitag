@@ -52,4 +52,4 @@ homebridge
 ```
 
 ## Supported features
-For now the bridge only supports temperature and humidity.
+For now the bridge only supports temperature, humidity, battery level and warning for low battery.
