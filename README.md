@@ -50,5 +50,12 @@ Now you can run Homebridge:
 homebridge
 ```
 
+## Find out Ruuvitag ID's
+You can find out Ruuvitag ID's by installing [`ruuvitag-debug`](https://github.com/pakastin/ruuvitag-debug):
+```bash
+sudo npm -g i ruuvitag-debug
+ruuvitag-debug
+```
+
 ## Supported features
 For now the bridge only supports temperature, humidity, battery level and warning for low battery.
