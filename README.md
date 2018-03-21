@@ -2,6 +2,10 @@
 
 With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use [RuuviTags](https://tag.ruuvi.com/) with [Apple Home](https://www.apple.com/ios/home/).
 
+## Updates
+- 1.2.0: [You can now set up heat and cold triggers](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.2.0)
+- 1.1.0: [Show battery level + low battery warning](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.1.0)
+
 ## Installation
 First, install [Avahi](https://www.avahi.org/) (Homebridge needs this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin
 _(you also need [Node.js](https://nodejs.org/) installed)_:
@@ -17,10 +21,6 @@ You can find out Ruuvitag ID's by installing and running [`ruuvitag-debug`](http
 sudo npm -g i ruuvitag-debug
 ruuvitag-debug
 ```
-
-## Updates
-- 1.2.0: [You can now set up heat and cold triggers](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.2.0)
-- 1.1.0: [Show battery level + low battery warning](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.1.0)
 
 ## Config
 
