@@ -3,6 +3,7 @@
 With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use [RuuviTags](https://tag.ruuvi.com/) with [Apple Home](https://www.apple.com/ios/home/).
 
 ## Updates
+- 1.3.0: [Motion triggers!](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.3.0)
 - 1.2.0: [You can now set up heat and cold triggers](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.2.0)
 - 1.1.0: [Show battery level + low battery warning](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.1.0)
 
