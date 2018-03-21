@@ -21,12 +21,22 @@ module.exports = (homebridge) => {
 class Ruuvitag {
   constructor (log, config) {
     this.log = log;
-    this.name = config['name'];
-    this.id = config['id'];
+    this.name = config.name;
+    this.id = config.id;
 
     this.tempService = new Service.TemperatureSensor(this.name);
     this.humidityService = new Service.HumiditySensor(this.name);
     this.batteryService = new Service.BatteryService(this.name);
+
+    if (config.heatTrigger) {
+      this.heatTriggerService = new Service.ContactSensor(config.heatTrigger.name || this.name, 'heat');
+      this.heatTriggerValue = Number(config.heatTrigger.value || 0);
+    }
+
+    if (config.coldTrigger) {
+      this.coldTriggerService = new Service.ContactSensor(config.coldTrigger.name || this.name, 'cold');
+      this.coldTriggerValue = Number(config.coldTrigger.value || 0);
+    }
 
     this.tempService
       .getCharacteristic(Characteristic.CurrentTemperature)
@@ -45,20 +55,32 @@ class Ruuvitag {
         const { temperature, humidity, battery } = data;
 
         this.tempService
-        .getCharacteristic(Characteristic.CurrentTemperature)
-        .updateValue(temperature);
+          .getCharacteristic(Characteristic.CurrentTemperature)
+          .updateValue(temperature);
 
         this.humidityService
-        .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-        .updateValue(humidity);
+          .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+          .updateValue(humidity);
 
         this.batteryService
-        .getCharacteristic(Characteristic.BatteryLevel)
-        .updateValue(Math.log10(10 * (battery - 2500) / 500) * 100);
+          .getCharacteristic(Characteristic.BatteryLevel)
+          .updateValue(Math.log10(10 * (battery - 2500) / 500) * 100);
 
         this.batteryService
-        .getCharacteristic(Characteristic.StatusLowBattery)
-        .updateValue((battery < 2700) ? 1 : 0);
+          .getCharacteristic(Characteristic.StatusLowBattery)
+          .updateValue((battery < 2700) ? 1 : 0);
+
+        if (config.heatTrigger) {
+          this.heatTriggerService
+            .getCharacteristic(Characteristic.ContactSensorState)
+            .updateValue((temperature > Number(config.heatTrigger.value)) ? 1 : 0);
+        }
+
+        if (config.coldTrigger) {
+          this.coldTriggerService
+            .getCharacteristic(Characteristic.ContactSensorState)
+            .updateValue((temperature < Number(config.coldTrigger.value)) ? 1 : 0);
+        }
       });
     };
 
@@ -73,6 +95,16 @@ class Ruuvitag {
     }
   }
   getServices () {
-    return [this.tempService, this.humidityService, this.batteryService];
+    const services = [this.tempService, this.humidityService, this.batteryService];
+
+    if (this.heatTriggerService) {
+      services.push(this.heatTriggerService);
+    }
+
+    if (this.coldTriggerService) {
+      services.push(this.coldTriggerService);
+    }
+
+    return services;
   }
 }
