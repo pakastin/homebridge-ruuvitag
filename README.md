@@ -4,14 +4,23 @@ With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use
 
 ## Installation
 First, install [Avahi](https://www.avahi.org/) (Homebridge needs this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin
-_(you also need Node.js installed)_:
+_(you also need [Node.js](https://nodejs.org/) installed)_:
 ```bash
 sudo apt-get install libavahi-compat-libdnssd-dev
 sudo npm i -g homebridge
 sudo npm i -g homebridge-ruuvitag
 ```
 
-Then create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridge/blob/master/config-sample.json) file
+## Find out Ruuvitag ID's
+You can find out Ruuvitag ID's by installing and running [`ruuvitag-debug`](https://github.com/pakastin/ruuvitag-debug):
+```bash
+sudo npm -g i ruuvitag-debug
+ruuvitag-debug
+```
+
+## Config
+
+Create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridge/blob/master/config-sample.json) file
 (change ID's and add/remove tags as necessary):
 
 ```json
@@ -44,6 +53,8 @@ Then create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridg
   ]
 }
 ```
+
+## Run
 
 Now you can run Homebridge:
 ```bash
