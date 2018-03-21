@@ -58,8 +58,15 @@ class Ruuvitag {
     const listenTo = (tag) => {
       tag.on('updated', (data) => {
         const { temperature, humidity, battery, accelerationX, accelerationY, accelerationZ } = data;
+        const previous = tag.previousValues;
 
-        const movement = Math.round(Math.abs(1000 - Math.sqrt(Math.pow(accelerationX, 2) + Math.abs(accelerationY, 2) + Math.pow(accelerationZ, 2)))) / 1000;
+        const deltaX = previous ? (previous.accelerationX - accelerationX) : 0;
+        const deltaY = previous ? (previous.accelerationY - accelerationY) : 0;
+        const deltaZ = previous ? (previous.accelerationZ - accelerationZ) : 0;
+
+        const movement = previous ? (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)) / 1000) : 0;
+
+        tag.previousValues = data;
 
         this.tempService
           .getCharacteristic(Characteristic.CurrentTemperature)
