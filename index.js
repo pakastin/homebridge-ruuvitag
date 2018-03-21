@@ -38,6 +38,11 @@ class Ruuvitag {
       this.coldTriggerValue = Number(config.coldTrigger.value || 0);
     }
 
+    if (config.motionTrigger) {
+      this.motionTriggerService = new Service.MotionSensor(config.motionTrigger.name || this.name);
+      this.motionTriggerValue = Number(config.motionTrigger.value || 0);
+    }
+
     this.tempService
       .getCharacteristic(Characteristic.CurrentTemperature)
       .setProps({ minValue: -200, maxValue: 200, minStep: 0.01 });
@@ -52,7 +57,9 @@ class Ruuvitag {
 
     const listenTo = (tag) => {
       tag.on('updated', (data) => {
-        const { temperature, humidity, battery } = data;
+        const { temperature, humidity, battery, accelerationX, accelerationY, accelerationZ } = data;
+
+        const movement = Math.round(Math.abs(1000 - Math.sqrt(Math.pow(accelerationX, 2) + Math.abs(accelerationY, 2) + Math.pow(accelerationZ, 2)))) / 1000;
 
         this.tempService
           .getCharacteristic(Characteristic.CurrentTemperature)
@@ -73,13 +80,19 @@ class Ruuvitag {
         if (config.heatTrigger) {
           this.heatTriggerService
             .getCharacteristic(Characteristic.ContactSensorState)
-            .updateValue((temperature > Number(config.heatTrigger.value)) ? 1 : 0);
+            .updateValue((temperature > this.heatTriggerValue) ? 1 : 0);
         }
 
         if (config.coldTrigger) {
           this.coldTriggerService
             .getCharacteristic(Characteristic.ContactSensorState)
-            .updateValue((temperature < Number(config.coldTrigger.value)) ? 1 : 0);
+            .updateValue((temperature < this.coldTriggerValue) ? 1 : 0);
+        }
+
+        if (config.motionTrigger) {
+          this.motionTriggerService
+            .getCharacteristic(Characteristic.MotionDetected)
+            .updateValue(movement > this.motionTriggerValue);
         }
       });
     };
@@ -103,6 +116,10 @@ class Ruuvitag {
 
     if (this.coldTriggerService) {
       services.push(this.coldTriggerService);
+    }
+
+    if (this.motionTriggerService) {
+      services.push(this.motionTriggerService);
     }
 
     return services;
