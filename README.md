@@ -18,6 +18,10 @@ sudo npm -g i ruuvitag-debug
 ruuvitag-debug
 ```
 
+## Updates
+- 1.2.0: [You can now set up heat and cold triggers](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.2.0)
+- 1.1.0: [Show battery level + low battery warning](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.1.0)
+
 ## Config
 
 Create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridge/blob/master/config-sample.json) file
