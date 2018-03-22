@@ -24,9 +24,22 @@ class Ruuvitag {
     this.name = config.name;
     this.id = config.id;
 
-    this.tempService = new Service.TemperatureSensor(this.name);
-    this.humidityService = new Service.HumiditySensor(this.name);
+    if (!config.disableTemp) {
+      this.tempService = new Service.TemperatureSensor(this.name);
+      this.tempService
+        .getCharacteristic(Characteristic.CurrentTemperature)
+        .setProps({ minValue: -200, maxValue: 200, minStep: 0.01 });
+    }
+    if (!config.disableHumidity) {
+      this.humidityService = new Service.HumiditySensor(this.name);
+      this.humidityService
+        .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+        .setProps({ minValue: 0, maxValue: 100, minStep: 0.5 });
+    }
     this.batteryService = new Service.BatteryService(this.name);
+    this.batteryService
+      .getCharacteristic(Characteristic.ChargingState)
+      .setValue(Characteristic.ChargingState.NOT_CHARGEABLE);
 
     if (config.heatTrigger) {
       this.heatTriggerService = new Service.ContactSensor(config.heatTrigger.name || this.name, 'heat');
@@ -43,18 +56,6 @@ class Ruuvitag {
       this.motionTriggerValue = Number(config.motionTrigger.value || 0);
     }
 
-    this.tempService
-      .getCharacteristic(Characteristic.CurrentTemperature)
-      .setProps({ minValue: -200, maxValue: 200, minStep: 0.01 });
-
-    this.humidityService
-      .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-      .setProps({ minValue: 0, maxValue: 100, minStep: 0.5 });
-
-    this.batteryService
-      .getCharacteristic(Characteristic.ChargingState)
-      .setValue(Characteristic.ChargingState.NOT_CHARGEABLE);
-
     const listenTo = (tag) => {
       tag.on('updated', (data) => {
         const { temperature, humidity, battery, accelerationX, accelerationY, accelerationZ } = data;
@@ -68,13 +69,17 @@ class Ruuvitag {
 
         tag.previousValues = data;
 
-        this.tempService
-          .getCharacteristic(Characteristic.CurrentTemperature)
-          .updateValue(temperature);
+        if (!config.disableTemp) {
+          this.tempService
+            .getCharacteristic(Characteristic.CurrentTemperature)
+            .updateValue(temperature);
+        }
 
-        this.humidityService
-          .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-          .updateValue(humidity);
+        if (!config.disableHumidity) {
+          this.humidityService
+            .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+            .updateValue(humidity);
+        }
 
         this.batteryService
           .getCharacteristic(Characteristic.BatteryLevel)
@@ -115,7 +120,17 @@ class Ruuvitag {
     }
   }
   getServices () {
-    const services = [this.tempService, this.humidityService, this.batteryService];
+    const services = [];
+
+    if (this.tempService) {
+      services.push(this.tempService);
+    }
+
+    if (this.humidityService) {
+      services.push(this.humidityService);
+    }
+
+    services.push(this.batteryService);
 
     if (this.heatTriggerService) {
       services.push(this.heatTriggerService);
