@@ -56,6 +56,16 @@ class Ruuvitag {
       this.motionTriggerValue = Number(config.motionTrigger.value || 0);
     }
 
+    if (config.highHumidityTrigger) {
+      this.highHumidityTriggerService = new Service.ContactSensor(config.highHumidityTrigger.name || this.name, 'highHumidity');
+      this.highHumidityTriggerValue = Number(config.highHumidityTrigger.value || 0);
+    }
+
+    if (config.lowHumidityTrigger) {
+      this.lowHumidityTriggerService = new Service.ContactSensor(config.lowHumidityTrigger.name || this.name, 'lowHumidity');
+      this.lowHumidityTriggerValue = Number(config.lowHumidityTrigger.value || 0);
+    }
+
     const listenTo = (tag) => {
       tag.on('updated', (data) => {
         const { temperature, humidity, battery, accelerationX, accelerationY, accelerationZ } = data;
@@ -101,6 +111,18 @@ class Ruuvitag {
             .updateValue((temperature < this.coldTriggerValue) ? 1 : 0);
         }
 
+        if (config.highHumidityTrigger) {
+          this.highHumidityTriggerService
+            .getCharacteristic(Characteristic.ContactSensorState)
+            .updateValue((humidity > this.highHumidityTriggerValue) ? 1 : 0);
+        }
+
+        if (config.lowHumidityTrigger) {
+          this.lowHumidityTriggerService
+            .getCharacteristic(Characteristic.ContactSensorState)
+            .updateValue((humidity < this.lowHumidityTriggerValue) ? 1 : 0);
+        }
+
         if (config.motionTrigger) {
           this.motionTriggerService
             .getCharacteristic(Characteristic.MotionDetected)
@@ -138,6 +160,14 @@ class Ruuvitag {
 
     if (this.coldTriggerService) {
       services.push(this.coldTriggerService);
+    }
+
+    if (this.highHumidityTriggerService) {
+      services.push(this.highHumidityTriggerService);
+    }
+
+    if (this.lowHumidityTriggerService) {
+      services.push(this.lowHumidityTriggerService);
     }
 
     if (this.motionTriggerService) {
