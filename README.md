@@ -69,5 +69,18 @@ Now you can run Homebridge:
 homebridge
 ```
 
+## Start on startup
+
+Install pm2:
+```bash
+npm -g i pm2
+```
+
+Start with pm2 and save as daemon:
+```
+pm2 start homebridge
+pm2 save
+pm2 startup
+```
 ## Supported features
 For now the bridge only supports temperature, humidity, battery level and warning for low battery.
