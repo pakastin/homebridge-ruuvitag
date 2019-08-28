@@ -1,4 +1,4 @@
-const ruuvi = require('node-ruuvitag');
+const ruuvi = require('@pakastin/node-ruuvitag');
 
 let Service;
 let Characteristic;
