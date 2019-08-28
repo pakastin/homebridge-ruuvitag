@@ -11,6 +11,7 @@ ruuvi.on('found', tag => {
   tags[tag.id] = tag;
   waitingTags[tag.id] && waitingTags[tag.id](tag);
   delete waitingTags[tag.id];
+  debug('found', tag.id);
 });
 
 module.exports = (homebridge) => {
