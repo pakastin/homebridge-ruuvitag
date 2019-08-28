@@ -1,4 +1,5 @@
 const ruuvi = require('@pakastin/node-ruuvitag');
+const debug = require('debug')('homebridge-ruuvitag');
 
 let Service;
 let Characteristic;
@@ -128,6 +129,7 @@ class Ruuvitag {
             .getCharacteristic(Characteristic.MotionDetected)
             .updateValue(movement > this.motionTriggerValue);
         }
+        debug(data);
       });
     };
 

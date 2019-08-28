@@ -4,7 +4,8 @@
   "description": "Ruuvitag bridge for Homebridge",
   "main": "index.js",
   "dependencies": {
-    "@pakastin/node-ruuvitag": "~4.1.1"
+    "@pakastin/node-ruuvitag": "~4.1.1",
+    "debug": "~4.1.1"
   },
   "devDependencies": {},
   "scripts": {
