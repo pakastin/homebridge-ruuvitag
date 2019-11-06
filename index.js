@@ -25,6 +25,7 @@ class Ruuvitag {
     this.log = log;
     this.name = config.name;
     this.id = config.id;
+    this.config = config;
 
     if (!config.disableTemp) {
       this.tempService = new Service.TemperatureSensor(this.name);
@@ -70,67 +71,7 @@ class Ruuvitag {
 
     const listenTo = (tag) => {
       tag.on('updated', (data) => {
-        const { temperature, humidity, battery, accelerationX, accelerationY, accelerationZ } = data;
-        const previous = tag.previousValues;
-
-        const deltaX = previous ? (previous.accelerationX - accelerationX) : 0;
-        const deltaY = previous ? (previous.accelerationY - accelerationY) : 0;
-        const deltaZ = previous ? (previous.accelerationZ - accelerationZ) : 0;
-
-        const movement = previous ? (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)) / 1000) : 0;
-
-        tag.previousValues = data;
-
-        if (!config.disableTemp) {
-          this.tempService
-            .getCharacteristic(Characteristic.CurrentTemperature)
-            .updateValue(temperature);
-        }
-
-        if (!config.disableHumidity) {
-          this.humidityService
-            .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-            .updateValue(humidity);
-        }
-
-        this.batteryService
-          .getCharacteristic(Characteristic.BatteryLevel)
-          .updateValue(Math.log10(10 * (battery - 2500) / 500) * 100);
-
-        this.batteryService
-          .getCharacteristic(Characteristic.StatusLowBattery)
-          .updateValue((battery < 2700) ? 1 : 0);
-
-        if (config.heatTrigger) {
-          this.heatTriggerService
-            .getCharacteristic(Characteristic.ContactSensorState)
-            .updateValue((temperature > this.heatTriggerValue) ? 1 : 0);
-        }
-
-        if (config.coldTrigger) {
-          this.coldTriggerService
-            .getCharacteristic(Characteristic.ContactSensorState)
-            .updateValue((temperature < this.coldTriggerValue) ? 1 : 0);
-        }
-
-        if (config.highHumidityTrigger) {
-          this.highHumidityTriggerService
-            .getCharacteristic(Characteristic.ContactSensorState)
-            .updateValue((humidity > this.highHumidityTriggerValue) ? 1 : 0);
-        }
-
-        if (config.lowHumidityTrigger) {
-          this.lowHumidityTriggerService
-            .getCharacteristic(Characteristic.ContactSensorState)
-            .updateValue((humidity < this.lowHumidityTriggerValue) ? 1 : 0);
-        }
-
-        if (config.motionTrigger) {
-          this.motionTriggerService
-            .getCharacteristic(Characteristic.MotionDetected)
-            .updateValue(movement > this.motionTriggerValue);
-        }
-        debug(data);
+        this.update(tag, data);
       });
     };
 
@@ -144,6 +85,72 @@ class Ruuvitag {
       };
     }
   }
+
+  update (tag, data) {
+    const { config } = this;
+    const { temperature, humidity, battery, accelerationX, accelerationY, accelerationZ } = data;
+    const previous = tag.previousValues;
+
+    tag.previousValues = data;
+
+    if (!config.disableTemp) {
+      this.tempService
+        .getCharacteristic(Characteristic.CurrentTemperature)
+        .updateValue(temperature);
+    }
+
+    if (!config.disableHumidity) {
+      this.humidityService
+        .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+        .updateValue(humidity);
+    }
+
+    this.batteryService
+      .getCharacteristic(Characteristic.BatteryLevel)
+      .updateValue(Math.log10(10 * (battery - 2500) / 500) * 100);
+
+    this.batteryService
+      .getCharacteristic(Characteristic.StatusLowBattery)
+      .updateValue((battery < 2700) ? 1 : 0);
+
+    if (config.heatTrigger) {
+      this.heatTriggerService
+        .getCharacteristic(Characteristic.ContactSensorState)
+        .updateValue((temperature > this.heatTriggerValue) ? 1 : 0);
+    }
+
+    if (config.coldTrigger) {
+      this.coldTriggerService
+        .getCharacteristic(Characteristic.ContactSensorState)
+        .updateValue((temperature < this.coldTriggerValue) ? 1 : 0);
+    }
+
+    if (config.highHumidityTrigger) {
+      this.highHumidityTriggerService
+        .getCharacteristic(Characteristic.ContactSensorState)
+        .updateValue((humidity > this.highHumidityTriggerValue) ? 1 : 0);
+    }
+
+    if (config.lowHumidityTrigger) {
+      this.lowHumidityTriggerService
+        .getCharacteristic(Characteristic.ContactSensorState)
+        .updateValue((humidity < this.lowHumidityTriggerValue) ? 1 : 0);
+    }
+
+    if (config.motionTrigger) {
+      const deltaX = previous ? (previous.accelerationX - accelerationX) : 0;
+      const deltaY = previous ? (previous.accelerationY - accelerationY) : 0;
+      const deltaZ = previous ? (previous.accelerationZ - accelerationZ) : 0;
+
+      const movement = previous ? (hypotenuse(deltaX, deltaY, deltaZ) / 1000) : 0;
+
+      this.motionTriggerService
+        .getCharacteristic(Characteristic.MotionDetected)
+        .updateValue(movement > this.motionTriggerValue);
+    }
+    debug(data);
+  }
+
   getServices () {
     const services = [];
 
@@ -179,4 +186,8 @@ class Ruuvitag {
 
     return services;
   }
+}
+
+function hypotenuse (a, b, c = 0) {
+  return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) + Math.pow(c, 2));
 }
