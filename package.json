@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "@pakastin/node-ruuvitag": "~4.1.1",
-    "debug": "~4.1.1"
+    "debug": "~4.1.1",
+    "pngjs": "^3.4.0"
   },
   "devDependencies": {},
   "scripts": {
