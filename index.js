@@ -26,6 +26,7 @@ class Ruuvitag {
     this.name = config.name;
     this.id = config.id;
     this.config = config;
+    this.updatedAt = 0;
 
     if (!config.disableTemp) {
       this.tempService = new Service.TemperatureSensor(this.name);
@@ -93,48 +94,88 @@ class Ruuvitag {
 
     tag.previousValues = data;
 
-    if (!config.disableTemp) {
-      this.tempService
-        .getCharacteristic(Characteristic.CurrentTemperature)
-        .updateValue(temperature);
+    const now = Date.now();
+
+    if ((config.frequency == null) || ((now - this.updatedAt) > config.frequency * 1000)) {
+      this.updatedAt = now;
+
+      if (!config.disableTemp) {
+        if (temperature !== this.temperature) {
+          this.temperature = temperature;
+          this.tempService
+            .getCharacteristic(Characteristic.CurrentTemperature)
+            .updateValue(temperature);
+        }
+      }
+
+      if (!config.disableHumidity) {
+        if (humidity !== this.humidity) {
+          this.humidity = humidity;
+          this.humidityService
+            .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+            .updateValue(humidity);
+        }
+      }
+      const batteryLevel = Math.log10(10 * (battery - 2500) / 500) * 100;
+      if (batteryLevel !== this.batteryLevel) {
+        this.batteryLevel = batteryLevel;
+        this.batteryService
+          .getCharacteristic(Characteristic.BatteryLevel)
+          .updateValue(batteryLevel);
+      }
     }
 
-    if (!config.disableHumidity) {
-      this.humidityService
-        .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-        .updateValue(humidity);
+    const batteryState = (battery < 2700) ? 1 : 0;
+
+    if (batteryState !== this.batteryState) {
+      this.batteryState = batteryState;
+      this.batteryService
+        .getCharacteristic(Characteristic.StatusLowBattery)
+        .updateValue((battery < 2700) ? 1 : 0);
     }
-
-    this.batteryService
-      .getCharacteristic(Characteristic.BatteryLevel)
-      .updateValue(Math.log10(10 * (battery - 2500) / 500) * 100);
-
-    this.batteryService
-      .getCharacteristic(Characteristic.StatusLowBattery)
-      .updateValue((battery < 2700) ? 1 : 0);
 
     if (config.heatTrigger) {
-      this.heatTriggerService
-        .getCharacteristic(Characteristic.ContactSensorState)
-        .updateValue((temperature > this.heatTriggerValue) ? 1 : 0);
+      const heatState = (temperature > this.heatTriggerValue) ? 1 : 0;
+
+      if (heatState !== this.heatState) {
+        this.heatState = heatState;
+        this.heatTriggerService
+          .getCharacteristic(Characteristic.ContactSensorState)
+          .updateValue(heatState);
+      }
     }
 
     if (config.coldTrigger) {
-      this.coldTriggerService
-        .getCharacteristic(Characteristic.ContactSensorState)
-        .updateValue((temperature < this.coldTriggerValue) ? 1 : 0);
+      const coldState = (temperature < this.coldTriggerValue) ? 1 : 0;
+
+      if (coldState !== this.coldState) {
+        this.coldState = coldState;
+        this.coldTriggerService
+          .getCharacteristic(Characteristic.ContactSensorState)
+          .updateValue(coldState);
+      }
     }
 
     if (config.highHumidityTrigger) {
-      this.highHumidityTriggerService
-        .getCharacteristic(Characteristic.ContactSensorState)
-        .updateValue((humidity > this.highHumidityTriggerValue) ? 1 : 0);
+      const highHumidityState = (humidity > this.highHumidityTriggerValue) ? 1 : 0;
+
+      if (highHumidityState !== this.highHumidityState) {
+        this.highHumidityState = highHumidityState;
+        this.highHumidityTriggerService
+          .getCharacteristic(Characteristic.ContactSensorState)
+          .updateValue(highHumidityState);
+      }
     }
 
     if (config.lowHumidityTrigger) {
-      this.lowHumidityTriggerService
-        .getCharacteristic(Characteristic.ContactSensorState)
-        .updateValue((humidity < this.lowHumidityTriggerValue) ? 1 : 0);
+      const lowHumidityState = (humidity < this.lowHumidityTriggerValue) ? 1 : 0;
+
+      if (lowHumidityState !== this.lowHumidityService) {
+        this.lowHumidityState = lowHumidityState;
+        this.lowHumidityTriggerService
+          .getCharacteristic(Characteristic.ContactSensorState)
+          .updateValue(lowHumidityState);
+      }
     }
 
     if (config.motionTrigger) {
@@ -144,9 +185,14 @@ class Ruuvitag {
 
       const movement = previous ? (hypotenuse(deltaX, deltaY, deltaZ) / 1000) : 0;
 
-      this.motionTriggerService
-        .getCharacteristic(Characteristic.MotionDetected)
-        .updateValue(movement > this.motionTriggerValue);
+      const motionState = movement > this.motionTriggerValue;
+
+      if (motionState !== this.motionState) {
+        this.motionState = motionState;
+        this.motionTriggerService
+          .getCharacteristic(Characteristic.MotionDetected)
+          .updateValue(motionState);
+      }
     }
     debug(data);
   }
