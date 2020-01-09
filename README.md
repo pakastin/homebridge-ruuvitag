@@ -85,4 +85,12 @@ pm2 save
 pm2 startup
 ```
 ## Supported features
-For now the bridge only supports temperature, humidity, battery level and warning for low battery.
+- temperature
+- humidity
+- battery level
+- battery level alert
+- heat alert
+- cold alert
+- high humidity alert
+- low humidity alert
+- motion alert
