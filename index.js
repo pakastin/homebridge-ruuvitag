@@ -1,4 +1,4 @@
-const ruuvi = require('@pakastin/node-ruuvitag');
+const ruuvi = require('node-ruuvitag');
 const debug = require('debug')('homebridge-ruuvitag');
 
 let Service;
