@@ -1,6 +1,6 @@
 {
   "name": "homebridge-ruuvitag",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Ruuvitag bridge for Homebridge",
   "main": "index.js",
   "dependencies": {
