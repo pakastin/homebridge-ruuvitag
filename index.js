@@ -116,7 +116,7 @@ class Ruuvitag {
             .updateValue(humidity);
         }
       }
-      const batteryLevel = Math.log10(10 * (battery - 2000) / 1000) * 100;
+      const batteryLevel = (battery - 2000) / 1000 * 100;
       if (batteryLevel !== this.batteryLevel) {
         this.batteryLevel = batteryLevel;
         this.batteryService
