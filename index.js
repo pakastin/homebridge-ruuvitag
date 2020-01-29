@@ -116,7 +116,7 @@ class Ruuvitag {
             .updateValue(humidity);
         }
       }
-      const batteryLevel = Math.log10(10 * (battery - 2500) / 500) * 100;
+      const batteryLevel = Math.log10(10 * (battery - 2000) / 1000) * 100;
       if (batteryLevel !== this.batteryLevel) {
         this.batteryLevel = batteryLevel;
         this.batteryService
@@ -125,13 +125,13 @@ class Ruuvitag {
       }
     }
 
-    const batteryState = (battery < 2700) ? 1 : 0;
+    const batteryState = (battery < 2000) ? 1 : 0;
 
     if (batteryState !== this.batteryState) {
       this.batteryState = batteryState;
       this.batteryService
         .getCharacteristic(Characteristic.StatusLowBattery)
-        .updateValue((battery < 2700) ? 1 : 0);
+        .updateValue(batteryState);
     }
 
     if (config.heatTrigger) {
