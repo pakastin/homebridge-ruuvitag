@@ -1,4 +1,7 @@
 const ruuvi = require('node-ruuvitag');
+const io = require('socket.io-client');
+var socket;
+
 const debug = require('debug')('homebridge-ruuvitag');
 
 let Service;
@@ -6,13 +9,6 @@ let Characteristic;
 
 const waitingTags = {};
 const tags = {};
-
-ruuvi.on('found', tag => {
-  tags[tag.id] = tag;
-  waitingTags[tag.id] && waitingTags[tag.id](tag);
-  delete waitingTags[tag.id];
-  debug('found', tag.id);
-});
 
 module.exports = (homebridge) => {
   Service = homebridge.hap.Service;
@@ -27,6 +23,18 @@ class Ruuvitag {
     this.id = config.id;
     this.config = config;
     this.updatedAt = 0;
+
+    if (config.socket) {
+      socket = io.connect(config.socket);
+      debug('socket set to:', config.socket)
+    } else {
+      ruuvi.on('found', tag => {
+        tags[tag.id] = tag;
+        waitingTags[tag.id] && waitingTags[tag.id](tag);
+        delete waitingTags[tag.id];
+        debug('found', tag.id);
+      });
+    }
 
     if (!config.disableTemp) {
       this.tempService = new Service.TemperatureSensor(this.name);
@@ -70,13 +78,25 @@ class Ruuvitag {
       this.lowHumidityTriggerValue = Number(config.lowHumidityTrigger.value || 0);
     }
 
-    const listenTo = (tag) => {
-      tag.on('updated', (data) => {
-        this.update(tag, data);
-      });
-    };
-
-    const tag = tags[this.id];
+    var tag;
+    var listenTo;
+    if (config.socket) {
+      tags[this.id] = { id: this.id };
+      tag = tags[this.id];
+      listenTo = (tag) => {
+        socket.on('updated', (data) => {
+          if (data.tagId == tag.id) {
+            this.update(tag, data);
+          }
+        });
+      }
+    } else {
+      listenTo = (tag) => {
+        tag.on('updated', (data) => {
+          this.update(tag, data);
+        });
+      }
+    }
 
     if (tag) {
       listenTo(tag);
