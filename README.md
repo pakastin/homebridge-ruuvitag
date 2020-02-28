@@ -64,6 +64,14 @@ Create a [`~/.homebridge/config.json`](https://github.com/nfarina/homebridge/blo
 }
 ```
 
+### Socket option
+
+You can listen to RuuviTag update events emitted from a [socket server](https://github.com/klaalo/ifData/tree/master/tagSocket) instead of using Bluetooth. This is signalled by adding a configuration parameter for the accessory.
+
+```json
+"socket": "http://raspberrypi.local:8787"
+```
+
 ## Run
 
 Now you can run Homebridge:
