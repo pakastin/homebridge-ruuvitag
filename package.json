@@ -4,7 +4,7 @@
   "description": "Ruuvitag bridge for Homebridge",
   "main": "index.js",
   "dependencies": {
-    "debug": "~4.1.1",
+    "debug": "~4.2.0",
     "node-addon-api": "^3.0.0",
     "node-ruuvitag": "^4.6.1",
     "socket.io-client": "^2.3.0"
