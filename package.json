@@ -7,7 +7,7 @@
     "debug": "~4.1.1",
     "node-addon-api": "^3.0.0",
     "node-ruuvitag": "^4.6.1",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^4.0.1"
   },
   "devDependencies": {},
   "scripts": {
