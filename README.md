@@ -25,7 +25,7 @@ sudo npm i -g homebridge-ruuvitag
 ```
 
 ## Find out Ruuvitag ID's
-You can find out Ruuvitag ID's by installing and running [`ruuvitag-debug`](https://github.com/pakastin/ruuvitag-debug):
+You can find out Ruuvitag ID's by running [`ruuvitag-debug`](https://github.com/pakastin/ruuvitag-debug):
 ```bash
 npx ruuvitag-debug
 ```
