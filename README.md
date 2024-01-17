@@ -3,6 +3,8 @@
 With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use [RuuviTags](https://tag.ruuvi.com/) with [Apple HomeKit](https://www.apple.com/ios/home/).
 
 ## Updates
+- 5.0.0: Added ruuvitag version 5 support
+- 2.3.0: Updated ruuvitag support
 - 1.8.0: Fixed flooding issue and added `frequency` (update frequency) parameter
 - 1.7.0: Added support for latest Node.js versions!
 - 1.5.0: [Humidity triggers!](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.5.0)
