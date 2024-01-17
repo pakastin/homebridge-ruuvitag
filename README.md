@@ -15,11 +15,16 @@ With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use
 - 1.1.0: [Show battery level + low battery warning](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.1.0)
 
 ## Installation
-First, install [Node.js](https://nodejs.org/) [Avahi](https://www.avahi.org/) (Homebridge needs this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin:
+First, install [Node.js](https://nodejs.org/) [Avahi](https://www.avahi.org/) (Homebridge might need this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin:
 ```bash
+# install Avahi if needed
+sudo apt-get install libavahi-compat-libdnssd-dev
+
+# install Node.js
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
-sudo apt-get install libavahi-compat-libdnssd-dev
+
+# install homebridge + homebridge-ruuvitag
 sudo npm i -g homebridge
 sudo npm i -g homebridge-ruuvitag
 ```
