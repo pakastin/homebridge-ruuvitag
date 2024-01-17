@@ -5,9 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "debug": "~4.3.4",
-    "node-addon-api": "^5.0.0",
-    "node-ruuvitag": "^4.7.0",
-    "socket.io-client": "^4.5.3"
+    "node-addon-api": "^7.0.0",
+    "node-ruuvitag": "^5.0.0",
+    "socket.io-client": "^4.7.4"
   },
   "devDependencies": {},
   "scripts": {
