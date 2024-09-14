@@ -3,6 +3,8 @@
 With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use [RuuviTags](https://tag.ruuvi.com/) with [Apple HomeKit](https://www.apple.com/ios/home/).
 
 ## Updates
+- 5.0.0: Added ruuvitag version 5 support
+- 2.3.0: Updated ruuvitag support
 - 1.8.0: Fixed flooding issue and added `frequency` (update frequency) parameter
 - 1.7.0: Added support for latest Node.js versions!
 - 1.5.0: [Humidity triggers!](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.5.0)
@@ -13,20 +15,24 @@ With this [Homebridge](https://github.com/nfarina/homebridge) plugin you can use
 - 1.1.0: [Show battery level + low battery warning](https://github.com/pakastin/homebridge-ruuvitag/releases/tag/v1.1.0)
 
 ## Installation
-First, install [Node.js](https://nodejs.org/) [Avahi](https://www.avahi.org/) (Homebridge needs this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin:
+First, install [Node.js](https://nodejs.org/) [Avahi](https://www.avahi.org/) (Homebridge might need this), [Homebridge](https://github.com/nfarina/homebridge) and this plugin:
 ```bash
+# install Avahi if needed
+sudo apt-get install libavahi-compat-libdnssd-dev
+
+# install Node.js
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
-sudo apt-get install libavahi-compat-libdnssd-dev
+
+# install homebridge + homebridge-ruuvitag
 sudo npm i -g homebridge
 sudo npm i -g homebridge-ruuvitag
 ```
 
 ## Find out Ruuvitag ID's
-You can find out Ruuvitag ID's by installing and running [`ruuvitag-debug`](https://github.com/pakastin/ruuvitag-debug):
+You can find out Ruuvitag ID's by running [`ruuvitag-debug`](https://github.com/pakastin/ruuvitag-debug):
 ```bash
-sudo npm -g i ruuvitag-debug
-ruuvitag-debug
+npx ruuvitag-debug
 ```
 
 ## Config
